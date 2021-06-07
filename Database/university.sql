@@ -12,7 +12,7 @@ SET foreign_key_checks = 1;
 create table student
 (
 	student_id char(11) primary key,
-    branch_id int not null check(branch_id > 0),
+	branch_id int not null check(branch_id > 0),
     password varchar(255) not null,
     first_name varchar(255) not null,
     last_name varchar(255),
@@ -57,7 +57,8 @@ create table marks_enrollment
     foreign key (student_id) references student(student_id)
 );
 
-
+insert into admin values ("916830", "adminpass@1234");
+ 
 insert into student values ("06714802717", 1, "password", "Shubham", "Nawani", "+91-998765431", "+91-7788903324", "A+"); 
 insert into student values ("00714802717", 2, "password", "Ajay", "Kumar", "+91-998765431", "+91-7788903324", "A+"); 
 insert into student values ("12314802717", 3, "password", "John", "Smith", "+91-998765431", "+91-7788903324", "A+"); 
@@ -75,13 +76,13 @@ insert into subject values("ETCS-202", "Theory of Computation", 3);
 insert into subject values("ETCS-301", "Algorithms", 4);
 insert into subject values("ETCS-302", "Introduction to Java Programming", 4);
 
-insert into marks values(1, 1, 78, "ETCS-101");
-insert into marks values(2, 1, 69, "ETEH-102");
+insert into marks values(1, 1, 75, "ETCS-101");
+insert into marks values(2, 1, 65, "ETEH-102");
 insert into marks values(3, 2, 81, "ETEP-103");
 insert into marks values(4, 2, 75, "ETEC-104");
 insert into marks values(5, 3, 88, "ETCS-201");
 insert into marks values(6, 3, 81, "ETCS-202");
-insert into marks values(7, 1, 74, "ETCS-301");
+insert into marks values(7, 3, 74, "ETCS-301");
 
 insert into marks_enrollment values (1, "06714802717");
 insert into marks_enrollment values (2, "06714802717");
@@ -89,43 +90,48 @@ insert into marks_enrollment values (3, "00714802717");
 insert into marks_enrollment values (4, "00714802717");
 insert into marks_enrollment values (5, "12314802717");
 insert into marks_enrollment values (6, "12314802717");
+insert into marks_enrollment values (7, "06714802717");
 
+
+-- reference queries are below to check functionality 
 
 -- select * from subject;
 -- select * from branch;
 -- select * from marks;
-select * from student;
-select * from marks_enrollment;
+-- select * from student;
+-- select * from marks_enrollment;
 
-select m.marks_id, s.subject_name, m.semester, m.marks 
-from branch b 
+-- all scores
+select st.first_name, m.marks_id, s.subject_name, m.semester, m.marks 
+from subject s
 	inner join marks m
-		on b.branch_id = m.branch_id
-	inner join subject s
-		on m.subject_id = s.subject_id
-where
-	semester = 2;
+		on s.subject_id = m.subject_id
+	inner join marks_enrollment me
+		on m.marks_id = me.marks_id
+	inner join student st
+		on me.student_id = st.student_id
+order by marks_id;
 
+-- average marks of a student by semster
 select CONCAT(st.first_name, " ", st.last_name) "Name", m.semester, CONCAT(sum(m.marks)/count(m.marks), "%") "Average"
-from branch b 
+from subject s
 	inner join marks m
-		on b.branch_id = m.branch_id
-	inner join subject s
-		on m.subject_id = s.subject_id
+		on m.subject_id = m.subject_id
 	inner join marks_enrollment me
 		on me.marks_id = m.marks_id
 	inner join student st
 		on st.student_id = me.student_id
-group by semester;
+where semester = 1 and st.student_id = "06714802717";
 
+-- aggregate
 select CONCAT(st.first_name, " ", st.last_name) "Name",  CONCAT(sum(m.marks)/count(m.marks), "%") "Total Aggregate"
-from branch b 
+from subject s
 	inner join marks m
-		on b.branch_id = m.branch_id
-	inner join subject s
-		on m.subject_id = s.subject_id
+		on m.subject_id = m.subject_id
 	inner join marks_enrollment me
 		on me.marks_id = m.marks_id
 	inner join student st
 		on st.student_id = me.student_id
 group by st.student_id;
+
+select "All check" from dual;
