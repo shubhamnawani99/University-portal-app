@@ -1,0 +1,38 @@
+Jun 08, 2021 9:11:19 AM com.universityportal.userservices.concrete.LoginServiceImpl invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 9:20:53 AM com.universityportal.userservices.concrete.LoginServiceImpl invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 9:22:08 AM com.universityportal.userservices.concrete.LoginServiceImpl invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 11:44:25 AM com.universityportal.utils.ShowOptions invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 11:44:29 AM com.universityportal.utils.ShowOptions invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 11:45:06 AM com.universityportal.database.dao.LoginDAO logInvalidCredentials
+SEVERE: Invalid credentials: 
+Jun 08, 2021 11:45:14 AM com.universityportal.utils.ShowOptions invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 11:45:17 AM com.universityportal.utils.ShowOptions invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 11:45:18 AM com.universityportal.utils.ShowOptions invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 11:45:19 AM com.universityportal.utils.ShowOptions invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 11:45:19 AM com.universityportal.utils.ShowOptions invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 11:45:19 AM com.universityportal.utils.ShowOptions invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 11:54:25 AM com.universityportal.database.dao.LoginDAO logInvalidCredentials
+SEVERE: Invalid credentials: 
+Jun 08, 2021 11:57:00 AM com.universityportal.database.dao.LoginDAO logInvalidCredentials
+SEVERE: Invalid credentials: 
+Jun 08, 2021 11:58:06 AM com.universityportal.database.dao.LoginDAO logInvalidCredentials
+SEVERE: Invalid credentials: 
+Jun 08, 2021 12:57:57 PM com.universityportal.database.dao.LoginDAO logInvalidCredentials
+SEVERE: Invalid credentials: 
+Jun 08, 2021 12:58:18 PM com.universityportal.utils.ShowOptions invalidOptionSelected
+INFO: Invalid option, please select an appropriate option
+Jun 08, 2021 1:06:43 PM com.universityportal.database.dao.LoginDAO validateStudentCredentials
+INFO: Student successfully logged in: 
+Jun 08, 2021 1:06:43 PM com.universityportal.database.dao.LoginDAO logInvalidCredentials
+SEVERE: Invalid credentials: 

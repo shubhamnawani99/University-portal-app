@@ -13,6 +13,8 @@ import com.universityportal.exceptions.FileReadException;
 
 /**
  * Singleton class to connect to database
+ * 
+ * @author Sunmeet
  */
 public class DB {
 

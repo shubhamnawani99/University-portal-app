@@ -1,5 +1,10 @@
 package com.universityportal.exceptions;
 
+/**
+ * 
+ * @author Sunmeet
+ *
+ */
 public class DatabaseException extends Exception {
 
 	private static final long serialVersionUID = 5097665761244310051L;

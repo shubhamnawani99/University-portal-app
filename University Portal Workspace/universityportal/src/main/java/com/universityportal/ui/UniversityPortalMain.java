@@ -1,13 +1,16 @@
 package com.universityportal.ui;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.universityportal.userservices.concrete.LoginServiceImpl;
+import com.universityportal.userservices.interfaces.LoginService;
 
-import com.universityportal.database.DB;
-import com.universityportal.exceptions.DatabaseException;
-import com.universityportal.exceptions.FileReadException;
-
+/**
+ * 
+ * @author Sunmeet
+ *
+ */
 public class UniversityPortalMain {
+	public static void main(String[] args) {
+		LoginService loginService = new LoginServiceImpl();
+		loginService.showMenu();
+	}
 }
