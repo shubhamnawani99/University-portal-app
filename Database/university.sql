@@ -43,7 +43,7 @@ create table subject
 create table marks
 (
 	marks_id int primary key auto_increment,
-	semester int check(semester >=1 and semester <= 4),
+	semester int check(semester >=1 and semester <= 8),
 	marks int check(marks >= 0 and marks <= 100),
 	subject_id char(8) not null,
     foreign key (subject_id) references subject(subject_id)
@@ -59,39 +59,97 @@ create table marks_enrollment
 
 insert into admin values ("916830", "adminpass@1234");
  
-insert into student values ("06714802717", 1, "password", "Shubham", "Nawani", "+91-998765431", "+91-7788903324", "A+"); 
-insert into student values ("00714802717", 2, "password", "Ajay", "Kumar", "+91-998765431", "+91-7788903324", "A+"); 
-insert into student values ("12314802717", 3, "password", "John", "Smith", "+91-998765431", "+91-7788903324", "A+"); 
+insert into student values 
+("06714802717", 1, "password", "Shubham", "Nawani", "+91-998765431", "+91-7788903324", "A+"),
+("00714802717", 2, "password", "Ajay", "Kumar", "+91-998765431", "+91-7788903324", "A+"),
+("12314802717", 3, "password", "Sunmeet", "Oberoi", "+91-998765431", "+91-7788903324", "A+"); 
 
-insert into branch values(1, "Computer Science and Engineering");
-insert into branch values(2, "Information Technology");
-insert into branch values(3, "Electrical Engineering");
+insert into branch values
+(1, "Computer Science and Engineering"),
+(2, "Information Technology"),
+(3, "Electrical Engineering");
 
-insert into subject values("ETCS-101", "Introduction to programming language", 3);
-insert into subject values("ETEH-102", "Introduction to history", 3);
-insert into subject values("ETEP-103", "Introduction to physics", 3);
-insert into subject values("ETEC-104", "Introduction to chemistry", 3);
-insert into subject values("ETCS-201", "Data Structures", 4);
-insert into subject values("ETCS-202", "Theory of Computation", 3);
-insert into subject values("ETCS-301", "Algorithms", 4);
-insert into subject values("ETCS-302", "Introduction to Java Programming", 4);
+-- subject(subject_id, subject_name, credits)
+insert into subject values
+-- 1st semester subjects
+("ETMA-101", "Applied Maths-I", 4),
+("ETPH-103", "Applied Physics-I", 3),
+("ETME-105", "Manufacturing Processes", 3),
+("ETEE-107", "Electrical Technology", 3),
+("ETCS-111", "Fundamentals of Computing", 2),
+-- 2nd semester subjects
+("ETMA-102", "Applied Maths-II", 4),
+("ETPH-104", "Applied Physics-II", 3),
+("ETME-110", "Engineering Mechanics", 3),
+("ETEC-106", "Electronic Devices", 3),
+("ETCS-108", "Introduction to Programming", 3),
+-- 3rd semester subjects (CSE)
+("ETMA-201", "Applied Maths-III", 4),
+("ETCS-203", "Foundation of Computer Science", 4),
+("ETEC-205", "Switching Theory and Logic Design", 4),
+("ETCS-209", "Data Structure", 4),
+("ETCS-211", "Computer Graphics and Multimedia", 4),
+-- 4th semester subjects (CSE)
+("ETMA-202", "Applied Maths-IV", 4),
+("ETCS-204", "Computer Organization and Architecture", 4),
+("ETCS-206", "Theory of Computation", 4),
+("ETCS-210", "Database Management Systems", 4),
+("ETEC-212", "Communication Systems", 4),
+-- 5th semester subjects (CSE)
+("ETCS-301", "Algorithms Design and Analysis", 4),
+("ETCS-303", "Software Engineering", 4),
+("ETCS-307", "Java Programming", 4),
+("ETEC-311", "Digital Communication", 4),
+("ETHS-301", "Communication Skills for Professionals", 1),
+-- 6th semester subjects (CSE)
+("ETCS-302", "Compiler Design", 4),
+("ETCS-304", "Operating Systems", 4),
+("ETCS-306", "Computer Networks", 4),
+("ETCS-308", "Web Technology", 3),
+("ETCS-310", "Artificial Intelligence", 4),
+-- 7th semester subjects (CSE)
+("ETCS-401", "Information Security", 4),
+("ETCS-403", "Software Testing and Quality Assurance", 3),
+("ETEC-405", "Wireless Communication ", 3),
+("ETCS-413", "Data Mining and Business Intelligence", 3),
+("ETCS-423", "Advanced DBMS", 3),
+-- 8th semester subjects (CSE)
+("ETIT-402", "Mobile Computing", 4),
+("ETCS-402", "Machine Learning", 3),
+("ETHS-402", "Human Values and Professional Ethics-II", 1),
+("ETIT-410", "Soft Computing", 3),
+("ETCS-424", "Principles of Programming Languages", 3);
 
-insert into marks values(1, 1, 75, "ETCS-101");
-insert into marks values(2, 1, 65, "ETEH-102");
-insert into marks values(3, 2, 81, "ETEP-103");
-insert into marks values(4, 2, 75, "ETEC-104");
-insert into marks values(5, 3, 88, "ETCS-201");
-insert into marks values(6, 3, 81, "ETCS-202");
-insert into marks values(7, 3, 74, "ETCS-301");
 
-insert into marks_enrollment values (1, "06714802717");
-insert into marks_enrollment values (2, "06714802717");
-insert into marks_enrollment values (3, "00714802717");
-insert into marks_enrollment values (4, "00714802717");
-insert into marks_enrollment values (5, "12314802717");
-insert into marks_enrollment values (6, "12314802717");
-insert into marks_enrollment values (7, "06714802717");
+-- marks(marks_id, semester, marks, subject_id)
+insert into marks values
+(1, 1, 75, "ETCS-111"),
+(2, 2, 65, "ETMA-102"),
+(3, 3, 81, "ETCS-203"),
+(4, 4, 75, "ETCS-204"),
+(5, 5, 88, "ETCS-303"),
+(6, 6, 81, "ETCS-306"),
+(7, 7, 64, "ETCS-413"),
+(8, 8, 78, "ETCS-402"),
+(9, 1, 85, "ETMA-101"),
+(10, 1, 81, "ETPH-103"),
+(11, 1, 78, "ETME-105"),
+(12, 1, 79, "ETEE-107");
 
+insert into marks_enrollment values 
+-- student1 mapping
+(1, "06714802717"),
+(2, "06714802717"),
+(3, "06714802717"),
+(4, "06714802717"),
+(5, "06714802717"),
+(6, "06714802717"),
+(7, "06714802717"),
+(8, "06714802717"),
+(9, "06714802717"),
+(10, "06714802717"),
+(11, "06714802717"),
+(12, "06714802717");
 
 -- reference queries are below to check functionality 
 
@@ -101,8 +159,12 @@ insert into marks_enrollment values (7, "06714802717");
 -- select * from student;
 -- select * from marks_enrollment;
 
--- all scores
-select st.first_name, m.marks_id, s.subject_name, m.semester, m.marks 
+-- Semester result for a student, result includes the student marks, subject name and credits per subject
+-- student_id and semester number goes in the WHERE clause
+-- TO BE DONE ON JAVA 
+	-- marks will be mapped to grades to get grade points from the refernce table in design doc
+	-- SGPA = sum(grade_points * credits) / sum(credits)
+select s.subject_name, s.credits, m.marks 
 from subject s
 	inner join marks m
 		on s.subject_id = m.subject_id
@@ -110,28 +172,20 @@ from subject s
 		on m.marks_id = me.marks_id
 	inner join student st
 		on me.student_id = st.student_id
-order by marks_id;
+where st.student_id = "06714802717" and m.semester = 1;
 
--- average marks of a student by semster
-select CONCAT(st.first_name, " ", st.last_name) "Name", m.semester, CONCAT(sum(m.marks)/count(m.marks), "%") "Average"
+-- Total Marks
+-- for total marks you can use the above semester wise result calculation and then call that for all semesters
+select semester, avg(marks), CONCAT(sum(marks), "/" , count(marks)*100) "Marks", sum(credits)
 from subject s
 	inner join marks m
-		on m.subject_id = m.subject_id
+		on s.subject_id = m.subject_id
 	inner join marks_enrollment me
-		on me.marks_id = m.marks_id
+		on m.marks_id = me.marks_id
 	inner join student st
-		on st.student_id = me.student_id
-where semester = 1 and st.student_id = "06714802717";
-
--- aggregate
-select CONCAT(st.first_name, " ", st.last_name) "Name",  CONCAT(sum(m.marks)/count(m.marks), "%") "Total Aggregate"
-from subject s
-	inner join marks m
-		on m.subject_id = m.subject_id
-	inner join marks_enrollment me
-		on me.marks_id = m.marks_id
-	inner join student st
-		on st.student_id = me.student_id
-group by st.student_id;
+		on me.student_id = st.student_id
+where st.student_id = "06714802717" 
+group by semester
+order by semester;
 
 select "All check" from dual;
