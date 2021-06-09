@@ -1,5 +1,6 @@
 package com.universityportal.userservices.concrete;
 
+import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -91,12 +92,9 @@ public class LoginServiceImpl implements LoginService {
 			Admin a = loginDao.validateAdminCredentials(username, password);
 			if (a != null) {
 				// login success
-				// TODO: Implement this
-				// AdminService adminService = new AdminServiceImpl();
-				// adminService.showMenu(a);
-				// TODO: remove this
 				System.out.println("Admin login Successful!");
-
+				AdminService adminService = new AdminServiceImpl();
+				adminService.adminMain();
 			} else {
 				// login failure
 				showErrorMenu("invalid_credentials_mesage", "admin");
@@ -104,6 +102,8 @@ public class LoginServiceImpl implements LoginService {
 		} catch (FileReadException | DatabaseException e) {
 			Log.getLogger().log(Level.SEVERE, e.getMessage());
 			showErrorMenu("backend_error", "admin");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -121,9 +121,10 @@ public class LoginServiceImpl implements LoginService {
 		String password = sc.nextLine();
 		return new String[] { username, password };
 	}
-	
+
 	/**
-	 * Notifies about invalid credentials, backend error and provides further options
+	 * Notifies about invalid credentials, backend error and provides further
+	 * options
 	 */
 	private void showErrorMenu(String messageKey, String caller) {
 		System.out.println(bundle.getString(messageKey));
@@ -131,9 +132,9 @@ public class LoginServiceImpl implements LoginService {
 		int choice = ShowOptions.showOptions("Retry", "Exit");
 		switch (choice) {
 		case 1:
-			if(caller.equals("student"))
+			if (caller.equals("student"))
 				showStudentLogin();
-			else if(caller.equals("admin"))
+			else if (caller.equals("admin"))
 				showAdminLogin();
 			break;
 		case 2:
