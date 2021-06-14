@@ -7,41 +7,50 @@ import org.junit.Test;
 
 public class StudentServiceImplSemesterResultTest {
 	static StudentServiceImpl studentService;
-	
-	
+
 	@BeforeClass
 	public static void TestSetup() {
-		studentService=new StudentServiceImpl();
+		studentService = new StudentServiceImpl();
 	}
-	
-	
+
 	@Test
-	public void testGetGrade1(){
-		assertEquals("O",studentService.getGrade(90));
+	public void testGetGradeWithHighMarks() {
+		assertEquals("O", studentService.getGrade(90));
 	}
-	
+
 	@Test
-	public void testGetGrade2(){
-		assertEquals("B+",studentService.getGrade(62));
+	public void testGetGradeWithAverageMarks() {
+		assertEquals("B+", studentService.getGrade(62));
 	}
-	
+
 	@Test
-	public void testGetGrade3() {
-		assertEquals("Ab",studentService.getGrade(0));
+	public void testGetGradeWithAbsent() {
+		assertEquals("Ab", studentService.getGrade(0));
 	}
+
 	@Test
-	public void testGetGradePoints1() {
-		assertEquals(10,studentService.getGradePoints(92));
+	public void testGetGradeWithNegativeMarks() {
+		assertEquals("NA", studentService.getGrade(-1));
 	}
+
 	@Test
-	public void testGetGradePoints2() {
-		assertEquals(4,studentService.getGradePoints(41));
+	public void testGetGradePointsWithHighMarks() {
+		assertEquals(10, studentService.getGradePoints(92));
 	}
-	
+
 	@Test
-	public void testGetGradePoints3() {
-		assertEquals(7,studentService.getGradePoints(62));
+	public void testGetGradePointsWithLowMarks() {
+		assertEquals(4, studentService.getGradePoints(41));
 	}
-	
+
+	@Test
+	public void testGetGradePointsWithAverageMarks() {
+		assertEquals(7, studentService.getGradePoints(62));
+	}
+
+	@Test
+	public void testGetGradePointsWithNegativeMarks() {
+		assertEquals(0, studentService.getGradePoints(-1));
+	}
 
 }
