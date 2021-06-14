@@ -18,7 +18,7 @@ import com.universityportal.utils.ShowOptions;
 /**
  * This class implements the Student Service class
  * 
- * @author BaluBruhathi, Ajay, Shubham
+ * @author BaluBruhathi, Ajay, Shubham Nawani
  * 
  */
 public class StudentServiceImpl implements StudentService {
@@ -56,7 +56,6 @@ public class StudentServiceImpl implements StudentService {
 		int choice = ShowOptions.showOptions("Check Complete Result", "Check Semester Wise Result", "Exit");
 		switch (choice) {
 		case 1:
-			// TODO:Check Complete Result
 			try {
 				displayTotalResult(student);
 			} catch (FileReadException | DatabaseException | SQLException e) {
@@ -290,7 +289,7 @@ public class StudentServiceImpl implements StudentService {
 	 * @throws FileReadException
 	 * @throws SQLException
 	 */
-	private int getMaxSemester(String rollno) throws FileReadException, DatabaseException, SQLException {
+	public int getMaxSemester(String rollno) throws FileReadException, DatabaseException, SQLException {
 		final Connection dbConn;
 		dbConn = DB.getInstance().getConnection();
 		final String getMaxSemesterQuery = "select max(semester) from marks m inner join marks_enrollment me on m.marks_id = me.marks_id	inner join student st on me.student_id = st.student_id where st.student_id = ?";
@@ -307,6 +306,26 @@ public class StudentServiceImpl implements StudentService {
 		return 1;
 	}
 
+	/**
+	 * @author Shubham Nawani
+	 * @param marks
+	 * @param total
+	 * @return total aggregate percentage
+	 */
+	public double calcPercentage(int marks, int total) {
+		return (((float) marks) / total) * 100;
+	}
+
+	/**
+	 * @author Shubham Nawani
+	 * @param studentMarks
+	 * @param totalMarks
+	 * @return student marks out of total marks
+	 */
+	public String calcTotalMarks(int studentMarks, int totalMarks) {
+		return studentMarks + "/" + totalMarks;
+	}
+
 	private void displayStudentSemetersDetails(ResultSet resultSet)
 			throws SQLException, DatabaseException, FileReadException {
 		while (resultSet.next()) {
@@ -317,7 +336,6 @@ public class StudentServiceImpl implements StudentService {
 			double sumPoints = 0;
 			int totalCredits = 0;
 			int totalStudentCredits = 0;
-			// int maxSemester = 8;
 			int maxSemester = getMaxSemester(student.getId());
 
 			System.out.println("Enrollment Number: " + student.getId());
@@ -325,8 +343,8 @@ public class StudentServiceImpl implements StudentService {
 			System.out.println("Programme:Bachelor of Technology(B.Tech.)");
 			System.out.println("Branch: " + branchName);
 			System.out.println();
-			System.out.println("Marks: " + studentMarks + "/" + totalMarks);
-			System.out.printf("Percentage: %.3f%% \n", (((float) studentMarks) / totalMarks) * 100);
+			System.out.println("Marks: " + calcTotalMarks(studentMarks, totalMarks));
+			System.out.printf("Percentage: %.3f%% \n", calcPercentage(studentMarks, totalMarks));
 
 			for (int i = 1; i <= maxSemester; ++i) {
 				double[] sgpa = getSgpa(i);
