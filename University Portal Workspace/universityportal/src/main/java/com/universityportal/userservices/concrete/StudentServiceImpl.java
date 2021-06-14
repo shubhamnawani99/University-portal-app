@@ -48,7 +48,11 @@ public class StudentServiceImpl implements StudentService {
 	    int choice=ShowOptions.showOptions("Check Complete Result","Check Semester Wise Result","Exit");
 		switch (choice) {
 		case 1:
-			//TODO:Check Complete Result
+			try {
+				displayTotalResult(student);
+			} catch (FileReadException | DatabaseException |SQLException e) {
+				Log.getLogger().log(Level.SEVERE, e.getMessage());
+			}
 			break;
 		case 2:	
 			
@@ -64,6 +68,7 @@ public class StudentServiceImpl implements StudentService {
 			// shouldn't be called
 			Log.getLogger().log(Level.SEVERE, "Show options returned invalid result");
 		}
+		System.out.println();
 		System.out.println("Back to DashBoard(Y/N)");
 		backToDashBoard=scanner.next();
 		if(backToDashBoard.equals("y") || backToDashBoard.equals("Y")){
@@ -85,7 +90,6 @@ public class StudentServiceImpl implements StudentService {
 	 */
 	public void displaySemesterResult(Student student) throws FileReadException, DatabaseException,SQLException{
 		System.out.println("Enter the semester to view the result");
-		@SuppressWarnings("resource")
 		Scanner scanner=new Scanner(System.in);
 		int semester=scanner.nextInt();
 		final Connection dbConn;
@@ -124,10 +128,6 @@ public class StudentServiceImpl implements StudentService {
 		if (marks==0) {
 			return "Ab";
 		}
-		// return Not Applicable "N/A" if marks < 0
-		else if(marks < 0) {
-			return "NA";
-		}
 		else {
 		String[] grades={"O","A+","A","B+","B","C","P","F"};
 		int[] leastRange={85,80,65,60,50,45,40,1};
@@ -146,9 +146,6 @@ public class StudentServiceImpl implements StudentService {
 	 * @return
 	 */
 	public int getGradePoints(int marks) {
-		if(marks < 0) {
-			return 0;
-		}
 		int i;
 		int[] gradePoints= {10,9,8,7,6,5,4,0};
 		int[] leastRange={85,80,65,60,50,45,40,1};
@@ -233,9 +230,57 @@ public class StudentServiceImpl implements StudentService {
 		return result;
 	}
 	
+	
+
+	private void displayTotalResult(Student student) throws FileReadException, DatabaseException,SQLException{
+		final Connection dbConn;
+		dbConn = DB.getInstance().getConnection();
+		ShowOptions.showHeader("Result");
+		String query1 ="select branch_name,sum(marks),count(marks)*100 from subject s inner join marks m on s.subject_id = m.subject_id inner join marks_enrollment me on m.marks_id = me.marks_id inner join student st on me.student_id = st.student_id inner join branch b on b.branch_id = st.branch_id where st.student_id = ?;";
+		try(PreparedStatement preparedStatement = dbConn.prepareStatement(query1)) {
+			preparedStatement.setString(1,student.getId());
+			try(ResultSet resultSet=preparedStatement.executeQuery();){
+				displayStudentSemetersDetails(resultSet);
+			}
+			}
+		
+
+		String totalResultQuery="select semester,sum(marks), count(marks)*100, sum(credits) from subject s inner join marks m on s.subject_id = m.subject_id inner join marks_enrollment me on m.marks_id = me.marks_id inner join student st on me.student_id = st.student_id where st.student_id = ?  group by semester order by semester;";	
+		try(PreparedStatement preparedStatement2 = dbConn.prepareStatement(totalResultQuery)) {
+			preparedStatement2.setString(1,student.getId());
+			try (ResultSet rs = preparedStatement2.executeQuery();) {
+				displayStudentSemestersMarks(rs);
+            }
+		}
+	}
+	
+	
+
+	
+	private void displayStudentSemetersDetails(ResultSet resultSet) throws SQLException{
+		while(resultSet.next()) {
+			String branchName=resultSet.getString(1);
+			//int num_of_semester=resultSet.getString(1);
+			int studentMarks=resultSet.getInt(2);
+			int totalMarks=resultSet.getInt(3);
+			System.out.println("Enrollment Number: "+student.getId());
+			System.out.println("Student Name: "+student.getFirstName());
+			System.out.println("Programme:Bachelor of Technology(B.Tech.)");
+			System.out.println("Branch: "+branchName);
+			System.out.println();
+			System.out.println("Marks: "+studentMarks+"/"+totalMarks);
+			System.out.printf("Percentage: %.3f%% \n",(((float)studentMarks)/totalMarks)*100);
+			//TODO System.out.println("CGPA: "+getCgpa());
+			//TODO System.out.println("Credits Obtained: "+getCreditsObtained());
+			
+			}
 }
-
-
-
-
-
+	
+	private void displayStudentSemestersMarks(ResultSet rs) throws SQLException,FileReadException,DatabaseException{
+		System.out.println(String.format("%-15s %-15s %-15s %-15s","Sem","Marks","Percentage","SGPA"));
+        while(rs.next()) {
+        	double[] sgpa=getSgpa(rs.getInt(1));
+        	System.out.println(String.format("%-15s %-15s %.3f%%         %-15.3f","Semester "+rs.getInt(1),rs.getInt(2)+"/"+rs.getInt(3),((float)rs.getInt(2)/rs.getInt(3))*100,sgpa[0]));
+        }
+	}
+}
