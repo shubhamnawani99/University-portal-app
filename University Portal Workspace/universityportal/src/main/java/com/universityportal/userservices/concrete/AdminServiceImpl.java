@@ -25,7 +25,7 @@ import com.universityportal.utils.ShowOptions;
 
 /**
  * @author whoami
- *
+ * 
  */
 public class AdminServiceImpl implements AdminService {
 
@@ -34,6 +34,7 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void adminMain() throws IOException {
 
+		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(System.in);
 		AdminDAO adminDao = new AdminDAO();
 		ArrayList<Marks> list = new ArrayList<Marks>();
@@ -49,7 +50,7 @@ public class AdminServiceImpl implements AdminService {
 			String line;
 			String[] arr = null;
 			while ((line = br.readLine()) != null) {
-				arr = line.split(",");
+				arr = line.trim().split("\\s*,\\s*");
 				boolean check = ContainCheck(arr);
 				if (check) {
 					Marks mark = new Marks(Integer.parseInt(arr[0]), arr[1], Integer.parseInt(arr[2]), arr[3],
