@@ -22,7 +22,7 @@ Development code for the mentor task given by Team 2 (T2) for the University Por
 
 ## Unit Testing Phase
 1. User story 1 - _Welcome and login pages for student and admin_ - Assigned to Sunmeet (Done)
-1. User story 2 - _Admin use case - insert validated data in DB_ - Assigned to Subharthi (Pending)
+1. User story 2 - _Admin use case - insert validated data in DB_ - Assigned to Subharthi (Done)
 1. User story 3 - _Semester wise student result_ - Assigned to Pavan (Done)
 1. User story 4 - _Complete student result_ - Assigned to Ajay (Pending)
 1. User story 5 - _Database configuration_ - Assigned to Shubham (Done)
