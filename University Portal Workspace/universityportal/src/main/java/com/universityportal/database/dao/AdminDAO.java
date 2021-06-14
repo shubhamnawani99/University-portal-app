@@ -3,7 +3,6 @@
  */
 package com.universityportal.database.dao;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -18,7 +17,7 @@ import com.universityportal.exceptions.FileReadException;
 import com.universityportal.utils.Log;
 
 /**
- * @author whoami
+ * @author whoami, Shubham Nawani
  *
  */
 public class AdminDAO {
@@ -31,36 +30,33 @@ public class AdminDAO {
 
 		try {
 			conn = DB.getInstance().getConnection();
-			int confirm = 0;
-			int confirm1 = 0;
-			if (list.isEmpty()) {
-				return false;
-			}
-
+			int confirmInsertionInMarks = 0;
+			int confirmInsertionInMarksEnrollment = 0;
 			// to insert into marks table
 			for (Marks obj : list) {
 
-				String query = "Insert into marks (semester,marks,subject_id) values (?,?,(select subject_id from subject where subject_id = ?));";
+				String query = "Insert into marks(marks_id,semester,marks,subject_id) values (?,?,?,?);";
+
 				statement = conn.prepareStatement(query);
-				// statement.setInt(1, obj.getMarkID());
-				statement.setInt(1, obj.getSems());
-				statement.setInt(2, obj.getMarks());
-				statement.setString(3, obj.getSubjectID());
-				confirm = statement.executeUpdate();
+				statement.setInt(1, obj.getMarkID());
+				statement.setInt(2, obj.getSems());
+				statement.setInt(3, obj.getMarks());
+				statement.setString(4, obj.getSubjectID());
+				confirmInsertionInMarks = statement.executeUpdate();
 
 			}
 
 			// to insert into marks enrollment
 			for (Marks obj : list) {
 
-				String sql = "Insert into marks_enrollment values ((select marks_id from marks where marks_id = ?),(select student_id from student where student_id = ?));";
+				String sql = "Insert into marks_enrollment values (?, ?);";
 				statement = conn.prepareStatement(sql);
 				statement.setInt(1, obj.getMarkID());
 				statement.setString(2, obj.getStudentID());
-				confirm1 = statement.executeUpdate();
+				confirmInsertionInMarksEnrollment = statement.executeUpdate();
 
 			}
-			if ((confirm > 0) && (confirm1 > 0)) {
+			if ((confirmInsertionInMarks > 0) && (confirmInsertionInMarksEnrollment > 0)) {
 				return true;
 			}
 
