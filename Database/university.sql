@@ -134,7 +134,8 @@ insert into marks values
 (9, 1, 85, "ETMA-101"),
 (10, 1, 81, "ETPH-103"),
 (11, 1, 78, "ETME-105"),
-(12, 1, 79, "ETEE-107");
+(12, 1, 79, "ETEE-107"),
+(15, 1, 79, "ETEE-107");
 
 insert into marks_enrollment values 
 -- student1 mapping
@@ -149,7 +150,8 @@ insert into marks_enrollment values
 (9, "06714802717"),
 (10, "06714802717"),
 (11, "06714802717"),
-(12, "06714802717");
+(12, "06714802717"),
+(15, "00714802717");
 
 -- reference queries are below to check functionality 
 
@@ -161,10 +163,7 @@ insert into marks_enrollment values
 
 -- Semester result for a student, result includes the student marks, subject name and credits per subject
 -- student_id and semester number goes in the WHERE clause
--- TO BE DONE ON JAVA 
-	-- marks will be mapped to grades to get grade points from the refernce table in design doc
-	-- SGPA = sum(grade_points * credits) / sum(credits)
-select s.subject_name, s.credits, m.marks 
+select me.marks_id, s.subject_name, s.credits, m.marks 
 from subject s
 	inner join marks m
 		on s.subject_id = m.subject_id
@@ -187,5 +186,14 @@ from subject s
 where st.student_id = "06714802717" 
 group by semester
 order by semester;
+
+-- Select Max Semester
+select max(semester)
+from marks m
+	inner join marks_enrollment me
+		on m.marks_id = me.marks_id
+	inner join student st
+		on me.student_id = st.student_id
+where st.student_id = "00714802717" ;
 
 select "All check" from dual;
