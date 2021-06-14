@@ -85,6 +85,7 @@ public class StudentServiceImpl implements StudentService {
 	 */
 	public void displaySemesterResult(Student student) throws FileReadException, DatabaseException,SQLException{
 		System.out.println("Enter the semester to view the result");
+		@SuppressWarnings("resource")
 		Scanner scanner=new Scanner(System.in);
 		int semester=scanner.nextInt();
 		final Connection dbConn;
@@ -123,6 +124,10 @@ public class StudentServiceImpl implements StudentService {
 		if (marks==0) {
 			return "Ab";
 		}
+		// return Not Applicable "N/A" if marks < 0
+		else if(marks < 0) {
+			return "NA";
+		}
 		else {
 		String[] grades={"O","A+","A","B+","B","C","P","F"};
 		int[] leastRange={85,80,65,60,50,45,40,1};
@@ -141,6 +146,9 @@ public class StudentServiceImpl implements StudentService {
 	 * @return
 	 */
 	public int getGradePoints(int marks) {
+		if(marks < 0) {
+			return 0;
+		}
 		int i;
 		int[] gradePoints= {10,9,8,7,6,5,4,0};
 		int[] leastRange={85,80,65,60,50,45,40,1};
