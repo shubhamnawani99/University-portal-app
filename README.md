@@ -26,7 +26,7 @@ Development code for the mentor task given by Team 2 (T2) for the University Por
 1. User story 3 - _Semester wise student result_ - Assigned to Pavan (Done)
 1. User story 4 - _Complete student result_ - Assigned to Ajay (Done)
 1. User story 5 - _Database configuration_ - Assigned to Shubham (Done)
-* Unit Test Case Document (Pending)
+* Unit Test Case Document (Done)
 
 ## QA Testing Phase
 * QA Test Document for T2 (Pending)
