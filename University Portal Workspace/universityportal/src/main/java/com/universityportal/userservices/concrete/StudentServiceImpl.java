@@ -230,7 +230,14 @@ public class StudentServiceImpl implements StudentService {
 		return result;
 	}
 	
-	
+	/**
+	 * This method prints the total semester result
+	 * @param resultSet
+	 * @param semester
+	 * @throws SQLException
+	 * @throws DatabaseException
+	 * @throws FileReadException
+	 */
 
 	private void displayTotalResult(Student student) throws FileReadException, DatabaseException,SQLException{
 		final Connection dbConn;
