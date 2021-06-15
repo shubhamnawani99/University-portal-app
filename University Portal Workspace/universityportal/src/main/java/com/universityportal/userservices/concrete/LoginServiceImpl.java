@@ -62,11 +62,9 @@ public class LoginServiceImpl implements LoginService {
 			Student s = loginDao.validateStudentCredentials(username, password);
 			if (s != null) {
 				// login success
-				// TODO: Implement this
-				// StudentService studentService = new StudentServiceImpl();
-				// studentService.showMenu(s);
-				// TODO: remove this
 				System.out.println("Student login Successful!");
+				StudentService studentService = new StudentServiceImpl(s);
+				studentService.showMenu(s);
 
 			} else {
 				// login failure
