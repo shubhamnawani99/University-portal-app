@@ -29,7 +29,7 @@ Development code for the mentor task given by Team 2 (T2) for the University Por
 * Unit Test Case Document (Done)
 
 ## QA Testing Phase
-* QA Test Document for T2 (Pending)
+* QA Test Document for T2 (Done)
 
 ## Review Phase
-* Review Document for T1 (Pending)
+* Review Code Document for T1 (Pending)
