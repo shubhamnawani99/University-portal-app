@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -76,14 +77,21 @@ public class StudentServiceImpl implements StudentService {
 			// shouldn't be called
 			Log.getLogger().log(Level.SEVERE, "Show options returned invalid result");
 		}
-		System.out.println("Back to DashBoard(Y/N)");
-		backToDashBoard = scanner.next();
-		if (backToDashBoard.equals("y") || backToDashBoard.equals("Y")) {
+		/**
+		 * @author Shubham Nawani
+		 */
+		System.out.println("Back to DashBoard?");
+		int choiceYesNo = ShowOptions.showOptions("Yes", "No");
+		switch (choiceYesNo) {
+		case 1:
 			showMenu(student);
-		} else {
+			break;
+		case 2:
 			return;
+		default:
+			// shouldn't be called
+			Log.getLogger().log(Level.SEVERE, "Show options returned invalid result");
 		}
-
 	}
 
 	/**
@@ -95,10 +103,22 @@ public class StudentServiceImpl implements StudentService {
 	 * @throws SQLException
 	 */
 	public void displaySemesterResult(Student student) throws FileReadException, DatabaseException, SQLException {
-		System.out.println("Enter the semester to view the result");
-		@SuppressWarnings("resource")
-		Scanner scanner = new Scanner(System.in);
-		int semester = scanner.nextInt();
+		int semester;
+		while(true){
+			try {
+				System.out.println("Enter the semester to view the result");
+				@SuppressWarnings("resource")
+				Scanner scanner = new Scanner(System.in);
+				semester = scanner.nextInt();
+				if(semester > 8 || semester < 1) {
+					System.out.println("Enter the correct semester value!");
+					continue;
+				}
+				break;
+			} catch (NumberFormatException | InputMismatchException e) {
+				System.out.println("Enter the correct semester value!");
+			}
+		}
 		final Connection dbConn;
 		dbConn = DB.getInstance().getConnection();
 		ShowOptions.showHeader("Result");
