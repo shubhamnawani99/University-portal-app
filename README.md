@@ -32,4 +32,4 @@ Development code for the mentor task given by Team 2 (T2) for the University Por
 * QA Test Document for T2 (Done)
 
 ## Review Phase
-* Review Code Document for T1 (Pending)
+* Review Code Document for T1 (Done)
