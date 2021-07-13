@@ -6,5 +6,5 @@ Development code for the mentor task given by Team 2 (T2) for the University Por
 
 1. Login (Done)
 2. Semester Result (Done)
-3. Complete Result
+3. Complete Result (Done)
 4. Upload Marks Data
