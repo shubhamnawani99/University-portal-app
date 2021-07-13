@@ -57,4 +57,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
+	
+	/**
+	 * Handles the proper length of user-name
+	 * 
+	 * @param invalidUsernameException
+	 * @return Response Entity of type error Response
+	 */
+	@ExceptionHandler(InvalidUsernameException.class)
+	public ResponseEntity<ErrorResponse> handlesUserInvalidException(
+			InvalidUsernameException invalidUsernameException) {
+
+		ErrorResponse response = new ErrorResponse();
+		response.setMessage(invalidUsernameException.getMessage());
+		response.setTimestamp(LocalDateTime.now());
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
 }

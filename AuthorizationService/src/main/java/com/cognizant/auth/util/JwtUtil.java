@@ -7,10 +7,14 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.cognizant.auth.exception.InvalidUsernameException;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class for JWT
@@ -19,13 +23,20 @@ import io.jsonwebtoken.SignatureAlgorithm;
  *
  */
 @Component
+@Slf4j
 public class JwtUtil {
-
+	
 	@Value("${app.secretKey}")
 	private String secretKey;
 
 	@Value("${app.jwtValidityMinutes}")
 	private long jwtValidityMinutes;
+
+	@Value("${jwtUtil.expiredMessage}")
+	private String EXPIRED_MESSAGE;
+
+	@Value("${jwtUtil.malformedMessage}")
+	private String MALFORMED_MESSAGE;
 
 	/**
 	 * Generates a JWT token using the given subject
@@ -47,7 +58,7 @@ public class JwtUtil {
 	 * @return Boolean representing whether token is valid
 	 */
 	public boolean validateToken(String token, String username) {
-		return !isTokenExpired(token) && username.equals(getUsernameFromToken(token));
+		return !isTokenExpiredOrInvalidFormat(token) && validUsername(username, token);
 	}
 
 	/**
@@ -72,17 +83,36 @@ public class JwtUtil {
 	}
 
 	/**
-	 * Tells whether token is expired or not
+	 * Tells whether token is expired or not and whether the token is in valid
+	 * format or not
 	 * 
 	 * @param token JWT
-	 * @return Boolean representing whether token is expired
+	 * @return Boolean representing whether token is expired or if the token is in
+	 *         invalid format
 	 */
-	public boolean isTokenExpired(String token) {
+	public boolean isTokenExpiredOrInvalidFormat(String token) {
 		try {
 			getClaims(token);
 		} catch (ExpiredJwtException e) {
+			log.info(EXPIRED_MESSAGE);
+			return true;
+		} catch (MalformedJwtException e) {
+			log.info(MALFORMED_MESSAGE);
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * 
+	 * @param username
+	 * @param token
+	 * @return boolean whether user name is valid or not
+	 */
+	public boolean validUsername(String username, String token) {
+		if(username.equals(getUsernameFromToken(token))){
+			return true;
+		}
+		throw new InvalidUsernameException("Incorrect Username");
 	}
 }

@@ -20,7 +20,6 @@ public class ValidationController {
 
 	@Autowired
 	UserDetailsService userService;
-
 	@Autowired
 	JwtUtil jwtUtil;
 
@@ -37,7 +36,7 @@ public class ValidationController {
 	@GetMapping("/admin")
 	public ResponseEntity<Boolean> validateAdmin(@RequestHeader(name = "Authorization") String token) {
 
-		if (!jwtUtil.isTokenExpired(token)) {
+		if (!jwtUtil.isTokenExpiredOrInvalidFormat(token)) {
 			UserDetails user = userService.loadUserByUsername(jwtUtil.getUsernameFromToken(token));
 			if (user.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")))
 				return new ResponseEntity<>(true, HttpStatus.OK);
@@ -62,13 +61,15 @@ public class ValidationController {
 	@GetMapping("/student/{username}")
 	public ResponseEntity<Boolean> validateStudent(@RequestHeader(name = "Authorization") String token,
 			@PathVariable(name = "username") String username) {
-		UserDetails user = userService.loadUserByUsername(username);
-
-		if (jwtUtil.validateToken(token, username)
-				&& user.getAuthorities().contains(new SimpleGrantedAuthority("STUDENT"))) {
-			return new ResponseEntity<>(true, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
+		
+		if (jwtUtil.validateToken(token, username)) {
+			UserDetails user = userService.loadUserByUsername(username);
+			if (user.getAuthorities().contains(new SimpleGrantedAuthority("STUDENT"))) {
+				return new ResponseEntity<>(true, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
+			}
 		}
+		return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
 	}
 }
