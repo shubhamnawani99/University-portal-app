@@ -2,10 +2,13 @@ package com.cognizant.student.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.cognizant.student.exception.InvalidSemesterException;
 import com.cognizant.student.model.Marks;
 import com.cognizant.student.model.Student;
 import com.cognizant.student.model.Subject;
@@ -13,8 +16,10 @@ import com.cognizant.student.repository.BranchRepository;
 import com.cognizant.student.repository.MarksRepository;
 import com.cognizant.student.repository.StudentRepository;
 import com.cognizant.student.repository.SubjectRepository;
-import com.cognizant.student.util.ResponseModel;
-import com.cognizant.student.util.ResultDetails;
+import com.cognizant.student.util.CompleteResult;
+import com.cognizant.student.util.CompleteResultDetails;
+import com.cognizant.student.util.SemesterResult;
+import com.cognizant.student.util.SemesterResultDetails;
 
 @Service
 public class StudentServiceImpl implements IStudentService {
@@ -28,6 +33,9 @@ public class StudentServiceImpl implements IStudentService {
 	@Autowired
 	private SubjectRepository subrepo;
 
+	@Value("${studentService.invalidSemesterMessage}")
+	private String INVALID_SEMESTER_VALUE_MESSAGE;
+
 	@Override
 	public Student saveStudent(Student student) {
 		return srepo.save(student);
@@ -40,10 +48,14 @@ public class StudentServiceImpl implements IStudentService {
 	 * 
 	 */
 	@Override
-	public ResponseModel getSemesterResult(String studentId, Integer semester) {
+	public SemesterResult getSemesterResult(String studentId, Integer semester) {
+
+		if (semester < 1 || semester > 8) {
+			throw new InvalidSemesterException(INVALID_SEMESTER_VALUE_MESSAGE);
+		}
 
 		// List to store all the semester result details
-		List<ResultDetails> semesterResultDetails = new ArrayList<>();
+		List<SemesterResultDetails> semesterResultDetails = new ArrayList<>();
 
 		// Total Marks Obtained
 		Integer marksObtained = 0;
@@ -87,8 +99,8 @@ public class StudentServiceImpl implements IStudentService {
 			}
 
 			// form the result details
-			ResultDetails resultDetails = new ResultDetails(subject.getSubjectName(), subjectCredit, marksScored, grade,
-					gradePoints);
+			SemesterResultDetails resultDetails = new SemesterResultDetails(subject.getSubjectName(), subjectCredit,
+					marksScored, grade, gradePoints);
 
 			// add result details to the list
 			semesterResultDetails.add(resultDetails);
@@ -104,8 +116,67 @@ public class StudentServiceImpl implements IStudentService {
 		String branchName = brepo.findById(branchId).get().getBranchName();
 
 		// Create and return the responseModel
-		return new ResponseModel(branchName, semester, marksObtained, totalMarks, percentage, sgpa, creditsObtained,
+		return new SemesterResult(branchName, semester, marksObtained, totalMarks, percentage, sgpa, creditsObtained,
 				totalCredits, semesterResultDetails);
+	}
+
+	/**
+	 * Method to compute the Complete result for a student
+	 * 
+	 * @param studentId
+	 * @return
+	 */
+	public CompleteResult getCompleteResult(String studentId) {
+		// get student name
+		Student student = srepo.findById(studentId).get();
+		String studentName = student.getFirstName() + " " + student.getLastName();
+
+		// get student program and branch names
+		final String programme = "Bachelors of Technology";
+		String branchName = brepo.findById(student.getBranchId()).get().getBranchName();
+
+		// Create the Complete Result Details
+		List<CompleteResultDetails> completeResultDetailsList = new ArrayList<>();
+
+		final Integer MAX_SEMESTER = getMaxSemester(studentId);
+		Integer totalMarks = 0;
+		Integer marksObtained = 0;
+		Double percentage = 0.0;
+		Double cgpa = 0.0;
+		Integer creditsObtained = 0;
+		Integer totalCredits = 0;
+
+		// Get result for all semesters
+		for (int semester = 1; semester <= MAX_SEMESTER; ++semester) {
+			SemesterResult semesterResult = getSemesterResult(studentId, semester);
+
+			Integer marksObtainedForSemester = semesterResult.getMarksObtained();
+			marksObtained += marksObtainedForSemester;
+
+			Integer totalMarksForSemester = semesterResult.getTotalMarks();
+			totalMarks += totalMarksForSemester;
+
+			Double percentageForSemester = semesterResult.getPercentage();
+			percentage += percentageForSemester;
+
+			Double sgpaForSemester = semesterResult.getSgpa();
+			cgpa += sgpaForSemester;
+
+			creditsObtained += semesterResult.getCreditsObtained();
+			totalCredits += semesterResult.getTotalCredits();
+
+			CompleteResultDetails completeResultDetails = new CompleteResultDetails(semester, marksObtainedForSemester,
+					totalMarksForSemester, percentageForSemester, sgpaForSemester);
+
+			completeResultDetailsList.add(completeResultDetails);
+		}
+
+		// get final percentage and CGPA
+		percentage /= MAX_SEMESTER;
+		cgpa /= MAX_SEMESTER;
+
+		return new CompleteResult(studentId, studentName, programme, branchName, marksObtained, totalMarks, percentage,
+				cgpa, creditsObtained, totalCredits, completeResultDetailsList);
 	}
 
 	/*****************************
@@ -118,7 +189,7 @@ public class StudentServiceImpl implements IStudentService {
 	 * @param marks for a subject
 	 * @return grade corresponding to the subject
 	 */
-	public static String getGrade(int marks) {
+	private String getGrade(int marks) {
 		String[] grades = { "O", "A+", "A", "B+", "B", "C", "P", "F", "Ab" };
 		int[] leastRange = { 85, 80, 65, 60, 50, 45, 40, 1, 0 };
 		for (int i = 0; i < grades.length; ++i) {
@@ -134,7 +205,7 @@ public class StudentServiceImpl implements IStudentService {
 	 * @param marks for a subject
 	 * @return grade points corresponding to the subject
 	 */
-	public int getGradePoints(int marks) {
+	private int getGradePoints(int marks) {
 		if (marks < 0) {
 			return 0;
 		}
@@ -147,6 +218,14 @@ public class StudentServiceImpl implements IStudentService {
 		}
 		return gradePoints[i];
 
+	}
+
+	private Integer getMaxSemester(String studentId) {
+		Optional<Integer> findMaxSemester = mrepo.findMaxSemester(studentId);
+		if (findMaxSemester.isEmpty()) {
+			return -1;
+		}
+		return findMaxSemester.get();
 	}
 
 }
