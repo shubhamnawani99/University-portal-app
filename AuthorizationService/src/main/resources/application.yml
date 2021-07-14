@@ -1,0 +1,45 @@
+# Server Properties
+server:
+  port: 8090
+  servlet:
+    context-path: /auth
+
+#Secret Key To Generate Token
+app:
+  secretKey: '[@q2Xg7@T4mOplFu#Ae]'
+  jwtValidityMinutes: 15
+
+# Spring properties
+spring:
+  application:
+    name: AUTH-SERVICE
+    
+  # Database Properties
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+  h2:
+    console:
+      enabled: true
+
+  #JPA Properties
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.H2Dialect    
+
+# Error Messages
+jwtUtil:
+  expiredMessage: Token has been expired
+  malformedMessage: Token is in invalid format
+userDetails:
+  errorMessage: User Does Not Exist!
+
+# Eureka Properties
+eureka:
+  client:
+    enabled: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/     
