@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "studentController.credentials-message",
+    "type": "java.lang.String",
+    "description": "A description for 'studentController.credentials-message'"
+  },
+  {
+    "name": "studentService.invalid-semester-message",
+    "type": "java.lang.String",
+    "description": "A description for 'studentService.invalid-semester-message'"
+  }
+]}

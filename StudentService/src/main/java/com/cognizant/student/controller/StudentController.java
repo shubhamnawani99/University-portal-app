@@ -101,4 +101,9 @@ public class StudentController {
 		}
 		return new ResponseEntity<CompleteResult>(HttpStatus.FORBIDDEN);
 	}
+	
+	@GetMapping(value = "/statusCheck")
+	public String statusCheck() {
+		return "OK";
+	}
 }
